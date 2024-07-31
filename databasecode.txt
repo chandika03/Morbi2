@@ -1,0 +1,48 @@
+Not included
+CREATE TABLE chatbot (
+	id int not null AUTO_INCREMENT,
+    replies text DEFAULT NULL,
+    queries text DEFAULT NULL,
+    PRIMARY KEY (id)
+);
+
+
+CREATE TABLE users (
+	user_id int not null AUTO_INCREMENT,
+    user_name VARCHAR,
+    user_email VARCHAR,
+    user_password VARCHAR,
+    user_gender varchar,
+    user_details varchar,
+    user_age int,
+    user_image,
+    PRIMARY KEY (id)
+);
+
+
+
+CREATE TABLE message (
+	id int not null AUTO_INCREMENT,
+    fromUser INT DEFAULT NULL,
+    toUser INT DEFAULT NULL,
+    message text,
+    PRIMARY KEY (id)
+);
+ALTER TABLE message add timedefinition time;
+ALTER TABLE message add CONSTRAINT fromuser_fk FOREIGN KEY (fromUser) REFERENCES users(user_id);
+ALTER TABLE message add CONSTRAINT touser_fk FOREIGN KEY (toUser) REFERENCES users(user_id);
+
+CREATE TABLE `report` (
+  `id` int(155) NOT NULL,
+  `userid` int(255) NOT NULL,
+  `reason` text NOT NULL,
+  `byuser` int(11) NOT NULL
+) 
+ALTER TABLE `report`
+  ADD PRIMARY KEY (`id`);
+
+
+
+
+
+
