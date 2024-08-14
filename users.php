@@ -58,22 +58,31 @@ body {
   color: #fff;
   text-decoration: none;
   font-weight: 700;
+  position: absolute;
+  left: 10px;
 }
 .navbar{
-  width: 50%;
-  display: flex;
-  justify-content: space-around;
-  margin: auto;
+  width: 90%; 
+    display: flex;
+    justify-content: flex-start; 
+    align-items: center;
+    margin: auto;
+    padding: 10px;
+    position: relative;
 }
 .navbar form{
-  margin-left: 15rem;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
 }
 .navbar a {
-  font-size: 18px;
-  color: #fff;
-  text-decoration: none;
-  font-weight: 500px;
-  margin-right: 40px;
+  color: #f2f2f2;
+    text-align: center;
+    padding: 8px 12px; 
+    font-size: 16px; 
+    text-decoration: none;
+    display: block;
+    margin-right: 5px;
 }
 
 section {
@@ -183,6 +192,12 @@ section .card .image img {
   font-size: 15px;
   font-weight: 500;
   color:black;
+
+}
+.name-bio-age-address .interest{
+  font-size: 10px;
+  font-weight: 500;
+  color:red;
 
 }
 .card .button {
@@ -307,6 +322,31 @@ section .card .image img {
 .drop p a{
   text-decoration: none;
 }
+.search-form {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-form label,
+.search-form select,
+.search-form input,
+.search-form button {
+    margin-right: 5px;
+    padding: 5px;
+    border-radius: 4px;
+    border: none;
+    font-size: 14px;
+}
+        .search-form button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .search-form button:hover {
+            background-color: #218838;
+        }
 
 </style>
 </head>
@@ -317,9 +357,21 @@ section .card .image img {
       <nav class="navbar">
         <a href="morbi.php">Home</a>
         <a href="users_about_us.php">About us</a>
-        <form role="search" method="POST" action="">
-          <input type="search" name= "search" placeholder="Search">
-          <i class="fa-solid fa-magnifying-glass"></i>
+        <form class="search-form" action="search_results.php" method="GET">
+            <label for="gender">Looking for:</label>
+            <select id="gender" name="gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" placeholder="Enter age" min="18" required>
+
+            <label for="location">Living in:</label>
+            <input type="text" id="location" name="location" placeholder="Enter location" required>
+
+            <button type="submit">Search</button>
         </form>
        
       </nav>
@@ -425,6 +477,7 @@ else{
               <span class="age"><?php echo $users [$userCount] ['user_age'];?></span>
               <span class="address">📍<?php echo $users [$userCount] ['user_address'];?></span>
               <span class="bio"><p><?php echo $users [$userCount] ['user_details']; ?></p></span>
+              <span class="interest"><p><?php echo $users [$userCount] ['user_interest']; ?></p></span>
               <div class="button">
                 <a href= "chat/chatmodule.php?toId=<?php echo $users [$userCount] ['user_id']; ?>"><button class="button" id="message_btn" >Message💬</button></a>
               </div>
