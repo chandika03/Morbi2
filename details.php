@@ -103,10 +103,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             height: 120px;
         }
 
-        .fullname {
-            /* Add additional styling here if needed */
-        }
-
         label {
             display: block;
             margin-bottom: 5px;
@@ -184,11 +180,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <center>
                 <label for="gender">Gender:</label><br />
-                <input type="radio" id="male" name="gender" value="m" <?php echo ($user_info['user_gender'] === 'male') ? 'checked' : ''; ?> />
+                <input type="radio" id="male" name="gender" value="male" <?php echo ($user_info['user_gender'] === 'male') ? 'checked' : ''; ?> />
                 <label for="male">Male</label>
-                <input type="radio" id="female" name="gender" value="f" <?php echo ($user_info['user_gender'] === 'female') ? 'checked' : ''; ?> />
+                <input type="radio" id="female" name="gender" value="female" <?php echo ($user_info['user_gender'] === 'female') ? 'checked' : ''; ?> />
                 <label for="female">Female</label>
-                <input type="radio" id="other" name="gender" value="o" <?php echo ($user_info['user_gender'] === 'other') ? 'checked' : ''; ?> />
+                <input type="radio" id="other" name="gender" value="other" <?php echo ($user_info['user_gender'] === 'other') ? 'checked' : ''; ?> />
                 <label for="other">Other</label><br />
                 </center>
 
