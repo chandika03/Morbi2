@@ -1,48 +1,232 @@
-Not included
-CREATE TABLE chatbot (
-	id int not null AUTO_INCREMENT,
-    replies text DEFAULT NULL,
-    queries text DEFAULT NULL,
-    PRIMARY KEY (id)
-);
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Aug 14, 2024 at 12:32 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
-CREATE TABLE users (
-	user_id int not null AUTO_INCREMENT,
-    user_name VARCHAR,
-    user_email VARCHAR,
-    user_password VARCHAR,
-    user_gender varchar,
-    user_details varchar,
-    user_age int,
-    user_image,
-    PRIMARY KEY (id)
-);
+--
+-- Database: `morbidb`
+--
 
+-- --------------------------------------------------------
 
+--
+-- Table structure for table `admin`
+--
 
-CREATE TABLE message (
-	id int not null AUTO_INCREMENT,
-    fromUser INT DEFAULT NULL,
-    toUser INT DEFAULT NULL,
-    message text,
-    PRIMARY KEY (id)
-);
-ALTER TABLE message add timedefinition time;
-ALTER TABLE message add CONSTRAINT fromuser_fk FOREIGN KEY (fromUser) REFERENCES users(user_id);
-ALTER TABLE message add CONSTRAINT touser_fk FOREIGN KEY (toUser) REFERENCES users(user_id);
+CREATE TABLE `admin` (
+  `id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`id`, `email`, `password`) VALUES
+(1, 'admin@gmail.com', 'admin123');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `message`
+--
+
+CREATE TABLE `message` (
+  `id` int(11) NOT NULL,
+  `fromUser` int(11) DEFAULT NULL,
+  `toUser` int(11) DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `timestamp` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `message`
+--
+
+INSERT INTO `message` (`id`, `fromUser`, `toUser`, `message`, `timestamp`) VALUES
+(1, 2, 1, NULL, '2023-08-12 18:05:25'),
+(60, 4, 7, NULL, '2023-09-28 12:44:43'),
+(65, 14, 7, NULL, '2023-09-28 13:00:40'),
+(66, 7, 7, NULL, '2023-10-01 11:01:08'),
+(67, 7, 6, NULL, '2023-10-01 11:01:25'),
+(68, 6, 7, NULL, '2023-10-01 11:01:42'),
+(69, 7, 6, 'hello', '2023-10-01 11:01:46'),
+(70, 6, 9, NULL, '2023-10-01 11:02:44'),
+(71, 16, 15, NULL, '2023-10-02 16:15:01'),
+(72, 16, 15, 'hello', '2023-10-02 16:15:09'),
+(73, 15, 16, 'hi', '2023-10-02 16:15:47'),
+(74, 15, 16, 'hi', '2023-10-02 16:15:51'),
+(75, 15, 16, 'hi', '2023-10-02 16:15:53'),
+(76, 16, 15, 'thik xa', '2023-10-02 16:15:59'),
+(77, 16, 12, NULL, '2023-10-02 17:55:15'),
+(78, 16, 12, 'hello', '2023-10-02 17:55:19'),
+(79, 16, 12, 'hi', '2023-10-02 17:55:25'),
+(80, 16, 6, NULL, '2023-10-02 17:55:34'),
+(81, 16, 6, 'hey', '2023-10-02 17:57:03'),
+(82, 16, 6, 'hiii', '2023-10-02 17:57:16'),
+(83, 6, 6, NULL, '2023-10-02 17:57:42'),
+(84, 6, 16, NULL, '2023-10-02 17:57:58'),
+(85, 6, 16, 'hello', '2023-10-02 17:58:06'),
+(86, 16, 6, 'hi', '2023-10-02 18:01:36'),
+(87, 6, 16, 'haha', '2023-10-02 18:01:46'),
+(88, 16, 7, NULL, '2023-10-02 18:04:25'),
+(89, 16, 7, 'hello aayush', '2023-10-02 18:04:29'),
+(90, 6, 9, 'hii', '2023-10-02 18:04:49'),
+(91, 16, 6, 'hi bijaya', '2023-10-02 18:05:15'),
+(92, 6, 16, 'haha k xa', '2023-10-02 18:05:28'),
+(93, 9, 6, 'hi', '2023-10-02 18:08:41'),
+(94, 9, 6, 'hi', '2023-10-02 18:08:45'),
+(95, 6, 9, 'all goods', '2023-10-02 18:09:22'),
+(96, 9, 7, 'k xa', '2023-10-02 18:17:13'),
+(97, 9, 11, 'hello rashik', '2023-10-02 18:17:56'),
+(98, 15, 6, 'hgh', '2023-10-02 18:19:16'),
+(99, 15, 16, 'k xa', '2023-10-02 21:40:39'),
+(100, 15, 16, 'ani vana', '2023-10-02 21:41:28'),
+(101, 6, 15, NULL, '2023-10-02 22:23:16'),
+(102, 6, 15, 'k xa', '2023-10-02 22:23:19'),
+(103, 15, 6, 'noiceee', '2023-10-02 22:23:25'),
+(104, 15, 15, NULL, '2023-10-03 09:35:52'),
+(105, 15, 6, 'hello bijaya', '2023-10-03 10:26:30'),
+(106, 6, 15, 'hi', '2023-10-03 10:26:53'),
+(107, 15, 13, NULL, '2024-07-28 16:32:09'),
+(108, 15, 13, 'abvdbsnav', '2024-07-28 16:32:58'),
+(109, 15, 12, NULL, '2024-07-28 16:35:09'),
+(110, 15, 9, NULL, '2024-08-02 08:51:20'),
+(111, 15, 11, NULL, '2024-08-02 08:54:41'),
+(112, 15, 11, 'hello hi', '2024-08-02 08:55:04'),
+(113, 11, 11, NULL, '2024-08-02 08:55:19'),
+(114, 11, 15, NULL, '2024-08-02 08:55:46'),
+(115, 11, 15, 'hello', '2024-08-02 08:55:49'),
+(116, 15, 11, 'nice to mee y', '2024-08-02 08:56:04'),
+(117, 11, 15, 'haha', '2024-08-02 08:56:18'),
+(118, 15, 11, 'hora', '2024-08-02 08:56:24');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `report`
+--
 
 CREATE TABLE `report` (
   `id` int(155) NOT NULL,
   `userid` int(255) NOT NULL,
   `reason` text NOT NULL,
   `byuser` int(11) NOT NULL
-) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `report`
+--
+
+INSERT INTO `report` (`id`, `userid`, `reason`, `byuser`) VALUES
+(1, 7, 'Inappropriate messages', 4),
+(2, 5, 'not good', 4),
+(3, 5, 'not goodvdnv', 4),
+(4, 5, 'Not appropriate content', 4),
+(5, 5, 'Not appropriate content', 4),
+(6, 10, 'not good content', 4),
+(7, 8, 'Not appropriate content', 5),
+(8, 4, 'not appropriate messages', 7),
+(9, 14, 'not appropriate content by this user', 7),
+(10, 9, 'inappropriate message', 6),
+(11, 16, 'very disgusting chat', 15);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL,
+  `user_name` varchar(255) NOT NULL,
+  `user_email` varchar(100) NOT NULL,
+  `user_password` varchar(255) NOT NULL,
+  `user_gender` varchar(10) NOT NULL,
+  `user_details` text DEFAULT NULL,
+  `user_age` int(3) NOT NULL,
+  `user_image` varchar(100) DEFAULT NULL,
+  `user_address` varchar(255) NOT NULL,
+  `user_interest` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `user_name`, `user_email`, `user_password`, `user_gender`, `user_details`, `user_age`, `user_image`, `user_address`, `user_interest`) VALUES
+(6, 'Bijaya Giri', 'bijaya@gmail.com', '$2y$10$68Kv9qkOpZ8coF8VvGXYSuqx8D.6uLZ1MsOD4KWadkutlQV7DVkTK', 'female', 'big time foodie\r\n', 24, 'images/J.jpg', 'lalitpur', 'painting, gardening, reading books, travelling'),
+(7, 'Aayush', 'aayush@gmail.com', '$2y$10$zTQ/0nFavyD7k035d0zPPer9V1qBmpOm3Sp2WXQ1E5EBCZ2512G2O', 'm', '       I am a coder.                         ', 25, 'images/B.jpg', 'kathmandu', 'coding, eating, dancing and singing'),
+(9, 'Sita', 'pri@gmail.com', '$2y$10$wcSFCWFUKidFxy9NmIR.OORPt3v33r7h1u6dIHwcwz3scbiM6lkVq', 'female', 'i love plants more than boys                        ', 20, 'images/Screenshot 2023-05-06 094402.png', 'Lokanthali', 'planting, travelling and enjoying life'),
+(11, 'Rashik', 'rashik@gmail.com', '$2y$10$vKXEO6Xbioezo.0/NEWVDO359A/frjRTVshlaSmryTdUPoofYIG9a', 'm', 'I am an innocent looking guy with specs 😎        ', 21, 'images/3.jpg', 'Balkumari', 'coding, dancing and eating'),
+(12, 'Hari Lama', 'hari@gmail.com', '$2y$10$xo8oeYxnoRPKlEEPgSxuterTqHJO6pE/GVzJbkuMHZ1hIPJuwcCK2', 'm', '     Interested into reading books and cycling.   ', 24, 'images/3.jpg', 'lalitpur', 'singing, painting, sketching and pottery'),
+(13, 'Shiva Thapa', 'shiva@gmail.com', '$2y$10$9unIE7S.m5P5Y6Gi3eQVS.jQm7PIZpMFF4zhdq2CJFKdHcncf4XeO', 'm', '        here in search for a partner', 25, 'images/G.jpg', 'lalitpur', 'playing guitar, shopping, chess'),
+(15, 'Chandu', 'chandu@gmail.com', '$2y$10$0SDWlyqKu1qBT5lbvuhb1eDRNtNZFxOdgtwvj7m4sSFbKJncJPPsq', 'f', 'I am a computer science student so I don\'t have any bio. ', 23, 'images/5.jpg', 'lalitpur', 'knitting, painting, playing guitar, singing and dancing'),
+(16, 'Ravin ', 'ravin@gmail.com', '$2y$10$ZYIJdErwzo3L.Szd2RTfn.yQI1e/0bbKWIq64FUuyh9lXQtDPdMXe', 'm', 'I dont have any bio    ', 26, 'images/I.jpg', 'lalitpur', 'sleeping, eating, video editing travelling, hiking'),
+(17, 'Luhi', 'luhi@gmail.com', '$2y$10$CjYX2fyOIe1uP31wgiQv8uY60XyzvjGoQnu9LV2R5uOT7LvOQOnWC', 'f', 'I dont have bio', 22, 'images/Screenshot 2023-05-06 094402.png', 'kathmandu', 'eating, cooking, planting');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `message`
+--
+ALTER TABLE `message`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `report`
+--
 ALTER TABLE `report`
   ADD PRIMARY KEY (`id`);
 
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`user_id`);
 
+--
+-- AUTO_INCREMENT for dumped tables
+--
 
+--
+-- AUTO_INCREMENT for table `admin`
+--
+ALTER TABLE `admin`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
+--
+-- AUTO_INCREMENT for table `message`
+--
+ALTER TABLE `message`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
 
+--
+-- AUTO_INCREMENT for table `report`
+--
+ALTER TABLE `report`
+  MODIFY `id` int(155) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+COMMIT;

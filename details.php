@@ -2,30 +2,15 @@
 include('dbconn.php');
 session_start();
 
-$stmt = $pdo->prepare("SELECT * FROM users");
-$stmt->execute();
-$value = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 $loggeduserid = $_SESSION['user'];
-$i = 0;
-$j = 0;
-$searchValue;
-@$user_id = $_GET[$i];
-@$count = $_GET['count'];
 
-do {
-    if ($user_id != null) {
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE user_id = :user_id");
-        $stmt->bindParam(':user_id', $user_id);
-        $stmt->execute();
-        $value[$i] = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $searchValue = true;
-    } else {
-        $searchValue = false;
-    }
-    $i++;
-} while ($i < $count);
+// Fetch the logged-in user's details
+$userkostmt = $pdo->prepare("SELECT * FROM users WHERE user_id = :user_id");
+$userkostmt->bindParam(":user_id", $loggeduserid);
+$userkostmt->execute();
+$user_info = $userkostmt->fetch(PDO::FETCH_ASSOC);
 
+// If the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = $_POST['name'];
     $email = $_POST['email'];
@@ -34,21 +19,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $gender = $_POST['gender'];
     $bio = $_POST['bio'];
     $interest = $_POST['interest'];
+    $latitude = $_POST['latitude'];
+    $longitude = $_POST['longitude'];
     $image = $_POST['image'];
 
-    // Check if an image was uploaded
+    // Image upload handling
     if (!empty($_FILES['image']['tmp_name'])) {
         $image = $_FILES['image']['tmp_name'];
         $targetDir = "images/";  // Specify the target directory to save the uploaded image
         $targetFile = $targetDir . basename($_FILES["image"]["name"]);
 
-        // Move the uploaded file to the target directory
         if (move_uploaded_file($image, $targetFile)) {
-            // Image upload successful, store the image path in the database
             $imagePath = $targetFile;
-
-            $query = "UPDATE users SET user_name = :name, user_email = :email, user_age = :age, user_address = :address, user_gender = :gender, user_details = :bio, user_interest = :interest, user_image = :imagePath WHERE user_id = :userid";
-
+            $query = "UPDATE users SET user_name = :name, user_email = :email, user_age = :age, user_address = :address, user_gender = :gender, user_details = :bio, user_interest = :interest, user_image = :imagePath, latitude = :latitude, longitude = :longitude WHERE user_id = :userid";
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(':userid', $loggeduserid);
             $stmt->bindParam(':name', $name);
@@ -57,17 +40,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bindParam(':address', $address);
             $stmt->bindParam(':gender', $gender);
             $stmt->bindParam(':bio', $bio);
-            $stmt->bindParam(':interest',$interest);
+            $stmt->bindParam(':interest', $interest);
             $stmt->bindParam(':imagePath', $imagePath);
+            $stmt->bindParam(':latitude', $latitude);
+            $stmt->bindParam(':longitude', $longitude);
             $stmt->execute();
         } else {
-            // Image upload failed, handle the error
             echo "Upload failed!!";
         }
     } else {
-        // No image uploaded, only update other form data
-        $query = "UPDATE users SET user_name = :name, user_email = :email, user_age = :age, user_address = :address, user_gender = :gender, user_details = :bio, user_interest = :interest WHERE user_id = :userid";
-
+        $query = "UPDATE users SET user_name = :name, user_email = :email, user_age = :age, user_address = :address, user_gender = :gender, user_details = :bio, user_interest = :interest, latitude = :latitude, longitude = :longitude WHERE user_id = :userid";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(':userid', $loggeduserid);
         $stmt->bindParam(':name', $name);
@@ -76,13 +58,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bindParam(':address', $address);
         $stmt->bindParam(':gender', $gender);
         $stmt->bindParam(':bio', $bio);
-        $stmt->bindParam(':interest',$interest);
+        $stmt->bindParam(':interest', $interest);
+        $stmt->bindParam(':latitude', $latitude);
+        $stmt->bindParam(':longitude', $longitude);
         $stmt->execute();
     }
 
     header("Location: users.php");
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -159,16 +144,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             cursor: pointer;
         }
     </style>
+    <script>
+    function updateLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                document.getElementById('latitude').value = position.coords.latitude;
+                document.getElementById('longitude').value = position.coords.longitude;
+            }, function(error) {
+                console.error("Error getting location: ", error);
+                alert("Unable to retrieve location. Please enable location services and try again.");
+            });
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+
+    // Prompt the user to share their location when the page loads
+    window.onload = function() {
+        updateLocation();
+    };
+    </script>
 </head>
 <body>
-<?php 
-$userkostmt = $pdo->prepare("SELECT * FROM users WHERE user_id = :user_id");
-$userkostmt->bindParam(":user_id", $loggeduserid);
-$userkostmt->execute();
-$user_information = $userkostmt->fetchAll(PDO::FETCH_ASSOC);
-foreach ($user_information as $user_info) {
-?>
-    <div class="update-profile">
+<div class="update-profile">
         <form action="#" method="POST" enctype="multipart/form-data">
             <div class="inputBox">
                 <br /><br /> 
@@ -202,6 +200,10 @@ foreach ($user_information as $user_info) {
                 <textarea id="bio" name="bio" rows="4" cols="50" placeholder="Bio"><?php echo $user_info['user_details'] ?></textarea><br />
                 <label>Interest:</label><br />
                 <textarea id="interest" name="interest" rows="4" cols="50" placeholder="Write atleast 10 interests"><?php echo $user_info['user_interest'] ?></textarea><br />
+
+                <input type="hidden" name="latitude" id="latitude" value="<?php echo $user_info['latitude'] ?>" />
+                <input type="hidden" name="longitude" id="longitude" value="<?php echo $user_info['longitude'] ?>" />
+
                 <input type="submit" value="Submit" />
                 <button>
                     <a href="users.php">Back</a>
@@ -209,6 +211,5 @@ foreach ($user_information as $user_info) {
             </div>
         </form>
     </div>
-<?php } ?>
 </body>
 </html>
