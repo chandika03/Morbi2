@@ -3,13 +3,19 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 14, 2024 at 12:32 PM
+-- Generation Time: Aug 18, 2024 at 11:04 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `morbidb`
@@ -108,7 +114,10 @@ INSERT INTO `message` (`id`, `fromUser`, `toUser`, `message`, `timestamp`) VALUE
 (115, 11, 15, 'hello', '2024-08-02 08:55:49'),
 (116, 15, 11, 'nice to mee y', '2024-08-02 08:56:04'),
 (117, 11, 15, 'haha', '2024-08-02 08:56:18'),
-(118, 15, 11, 'hora', '2024-08-02 08:56:24');
+(118, 15, 11, 'hora', '2024-08-02 08:56:24'),
+(119, 20, 9, NULL, '2024-08-15 08:32:58'),
+(120, 20, 16, NULL, '2024-08-15 08:35:45'),
+(121, 20, 16, 'hi', '2024-08-15 08:36:08');
 
 -- --------------------------------------------------------
 
@@ -156,23 +165,27 @@ CREATE TABLE `users` (
   `user_age` int(3) NOT NULL,
   `user_image` varchar(100) DEFAULT NULL,
   `user_address` varchar(255) NOT NULL,
-  `user_interest` varchar(255) DEFAULT NULL
+  `user_interest` varchar(255) DEFAULT NULL,
+  `latitude` float(10,6) DEFAULT NULL,
+  `longitude` float(10,6) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `user_name`, `user_email`, `user_password`, `user_gender`, `user_details`, `user_age`, `user_image`, `user_address`, `user_interest`) VALUES
-(6, 'Bijaya Giri', 'bijaya@gmail.com', '$2y$10$68Kv9qkOpZ8coF8VvGXYSuqx8D.6uLZ1MsOD4KWadkutlQV7DVkTK', 'female', 'big time foodie\r\n', 24, 'images/J.jpg', 'lalitpur', 'painting, gardening, reading books, travelling'),
-(7, 'Aayush', 'aayush@gmail.com', '$2y$10$zTQ/0nFavyD7k035d0zPPer9V1qBmpOm3Sp2WXQ1E5EBCZ2512G2O', 'm', '       I am a coder.                         ', 25, 'images/B.jpg', 'kathmandu', 'coding, eating, dancing and singing'),
-(9, 'Sita', 'pri@gmail.com', '$2y$10$wcSFCWFUKidFxy9NmIR.OORPt3v33r7h1u6dIHwcwz3scbiM6lkVq', 'female', 'i love plants more than boys                        ', 20, 'images/Screenshot 2023-05-06 094402.png', 'Lokanthali', 'planting, travelling and enjoying life'),
-(11, 'Rashik', 'rashik@gmail.com', '$2y$10$vKXEO6Xbioezo.0/NEWVDO359A/frjRTVshlaSmryTdUPoofYIG9a', 'm', 'I am an innocent looking guy with specs 😎        ', 21, 'images/3.jpg', 'Balkumari', 'coding, dancing and eating'),
-(12, 'Hari Lama', 'hari@gmail.com', '$2y$10$xo8oeYxnoRPKlEEPgSxuterTqHJO6pE/GVzJbkuMHZ1hIPJuwcCK2', 'm', '     Interested into reading books and cycling.   ', 24, 'images/3.jpg', 'lalitpur', 'singing, painting, sketching and pottery'),
-(13, 'Shiva Thapa', 'shiva@gmail.com', '$2y$10$9unIE7S.m5P5Y6Gi3eQVS.jQm7PIZpMFF4zhdq2CJFKdHcncf4XeO', 'm', '        here in search for a partner', 25, 'images/G.jpg', 'lalitpur', 'playing guitar, shopping, chess'),
-(15, 'Chandu', 'chandu@gmail.com', '$2y$10$0SDWlyqKu1qBT5lbvuhb1eDRNtNZFxOdgtwvj7m4sSFbKJncJPPsq', 'f', 'I am a computer science student so I don\'t have any bio. ', 23, 'images/5.jpg', 'lalitpur', 'knitting, painting, playing guitar, singing and dancing'),
-(16, 'Ravin ', 'ravin@gmail.com', '$2y$10$ZYIJdErwzo3L.Szd2RTfn.yQI1e/0bbKWIq64FUuyh9lXQtDPdMXe', 'm', 'I dont have any bio    ', 26, 'images/I.jpg', 'lalitpur', 'sleeping, eating, video editing travelling, hiking'),
-(17, 'Luhi', 'luhi@gmail.com', '$2y$10$CjYX2fyOIe1uP31wgiQv8uY60XyzvjGoQnu9LV2R5uOT7LvOQOnWC', 'f', 'I dont have bio', 22, 'images/Screenshot 2023-05-06 094402.png', 'kathmandu', 'eating, cooking, planting');
+INSERT INTO `users` (`user_id`, `user_name`, `user_email`, `user_password`, `user_gender`, `user_details`, `user_age`, `user_image`, `user_address`, `user_interest`, `latitude`, `longitude`) VALUES
+(6, 'Bijaya Giri', 'bijaya@gmail.com', '$2y$10$68Kv9qkOpZ8coF8VvGXYSuqx8D.6uLZ1MsOD4KWadkutlQV7DVkTK', 'female', 'big time foodie\r\n', 24, 'images/J.jpg', 'lalitpur', 'painting, gardening, reading books, travelling', 27.649637, 85.344254),
+(7, 'Aayush', 'aayush@gmail.com', '$2y$10$zTQ/0nFavyD7k035d0zPPer9V1qBmpOm3Sp2WXQ1E5EBCZ2512G2O', 'male', '       I am a coder.                         ', 25, 'images/B.jpg', 'kathmandu', 'coding, eating, dancing and singing', NULL, NULL),
+(9, 'Sita', 'pri@gmail.com', '$2y$10$wcSFCWFUKidFxy9NmIR.OORPt3v33r7h1u6dIHwcwz3scbiM6lkVq', 'female', 'i love plants more than boys                        ', 20, 'images/Screenshot 2023-05-06 094402.png', 'Lokanthali', 'planting, travelling and enjoying life', NULL, NULL),
+(11, 'Rashik', 'rashik@gmail.com', '$2y$10$vKXEO6Xbioezo.0/NEWVDO359A/frjRTVshlaSmryTdUPoofYIG9a', 'male', 'I am an innocent looking guy with specs 😎        ', 21, 'images/3.jpg', 'Balkumari', 'coding, dancing and eating', 0.000000, 0.000000),
+(12, 'Hari Lama', 'hari@gmail.com', '$2y$10$xo8oeYxnoRPKlEEPgSxuterTqHJO6pE/GVzJbkuMHZ1hIPJuwcCK2', 'male', '     Interested into reading books and cycling.   ', 24, 'images/3.jpg', 'lalitpur', 'singing, painting, sketching and pottery', NULL, NULL),
+(13, 'Shiva Thapa', 'shiva@gmail.com', '$2y$10$9unIE7S.m5P5Y6Gi3eQVS.jQm7PIZpMFF4zhdq2CJFKdHcncf4XeO', 'male', 'here in search for a partner', 25, 'images/G.jpg', 'lalitpur', 'playing guitar, shopping, chess', 27.649637, 85.344254),
+(15, 'Chandu', 'chandu@gmail.com', '$2y$10$0SDWlyqKu1qBT5lbvuhb1eDRNtNZFxOdgtwvj7m4sSFbKJncJPPsq', 'female', 'I am a computer science student so I don\'t have any bio. ', 23, 'images/5.jpg', 'lalitpur', 'knitting, painting, playing guitar, singing and dancing', 27.624281, 85.344620),
+(16, 'Ravin ', 'ravin@gmail.com', '$2y$10$ZYIJdErwzo3L.Szd2RTfn.yQI1e/0bbKWIq64FUuyh9lXQtDPdMXe', 'other', 'I dont have any bio    ', 26, 'images/I.jpg', 'lalitpur', 'sleeping, eating, video editing travelling, hiking', 27.624281, 85.344620),
+(17, 'Luhi', 'luhi@gmail.com', '$2y$10$CjYX2fyOIe1uP31wgiQv8uY60XyzvjGoQnu9LV2R5uOT7LvOQOnWC', 'female', 'I dont have bio', 22, 'images/Screenshot 2023-05-06 094402.png', 'kathmandu', 'eating, cooking, planting', 27.649637, 85.344254),
+(19, 'Ambu ', 'ambu@gmail.com', '$2y$10$KEAJNZAhDKNdrPX8fg/g4OADIwzq4VguDUj69KQ/xozUKdPbGYfMi', 'female', 'I\'m my favorite.', 24, 'images/D.jpg', 'Lalitpur', 'knitting, cooking, cycling, petLover', 27.624281, 85.344620),
+(20, 'Sohesh', 'sohesh@gmail.com', '$2y$10$3IWniMzEmKuYCb4EAF3zaeNkivFeYLL61tvydDZAP6xY00rjlrdFC', 'male', 'I love messi. #MessiIsLove', 29, 'images/messi.jpg', 'lalitpur', 'watching football, irritating people, laughing, playing fifa, messi is loveeeee', 27.671110, 85.344620);
 
 --
 -- Indexes for dumped tables
@@ -216,7 +229,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `message`
 --
 ALTER TABLE `message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
 
 --
 -- AUTO_INCREMENT for table `report`
@@ -228,5 +241,9 @@ ALTER TABLE `report`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
