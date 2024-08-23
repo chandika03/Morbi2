@@ -23,18 +23,21 @@
 
 
   // $query = "SELECT m.message,m.toUser,u_to.user_name AS receiver_name, u_to.user_image AS receiver_image, m.timestamp FROM message m JOIN users u_to ON m.toUser = u_to.user_id";
-  $query = "SELECT m.message, m.toUser, u_to.user_name AS receiver_name, u_to.user_image AS receiver_image, m.timestamp
+  $query = "SELECT m.message, m.toUser, m.fromUser, u_to.user_name AS receiver_name, u_to.user_image AS receiver_image, m.timestamp, u_from.user_name AS sender_name, u_from.user_image AS sender_image
   FROM (
       SELECT toUser, MAX(timestamp) AS latest_timestamp
       FROM message
       GROUP BY toUser
   ) latest_msg
   JOIN message m ON latest_msg.toUser = m.toUser AND latest_msg.latest_timestamp = m.timestamp
-  JOIN users u_to ON m.toUser = u_to.user_id;
-  
-  )";
+  JOIN users u_to ON m.toUser = u_to.user_id
+  JOIN users u_from ON m.fromUser = u_from.user_id
+   WHERE m.toUser = :user_to_id OR m.fromUser = :user_from_id;)";
 
 $statement = $pdo->prepare($query);
+$statement->bindParam(":user_to_id", $user_id);
+$statement->bindParam(":user_from_id", $user_id);
+
 $statement->execute();
 $messages = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -153,9 +156,31 @@ $messages = $statement->fetchAll(PDO::FETCH_ASSOC);
             ?>
           <a href="#">
             <tr>
-            <td class="user-avatar"><img class="img-class" src="<?php echo $message['receiver_image']  ?>" alt=""/></td>
+            <td class="user-avatar"><img class="img-class" src="<?php if($message["toUser"] == $user_id) {
+              echo $message["sender_image"];
+            } else {
+              
+              echo $message['receiver_image'];
+            }
+            
+            ?>" alt=""/></td>
             <!-- <td class="user-avatar" data-avatar="👤"><?php //echo $item['user_image'] ?></td> -->
-            <td><?php echo "<a href='chat/chatmodule.php?toId=" . $message['toUser'] . "'>" . $message['receiver_name'] ?></td>
+            <!-- <td><?php echo "<a href='chat/chatmodule.php?toId=" . $message['toUser'] . "'>" . $message['receiver_name'] ?></td> -->
+            <td>
+            <a href="<?php
+if ($message['toUser'] == $user_id) {
+    echo "chat/chatmodule.php?toId=" . $message['fromUser'];
+} else {
+    echo "chat/chatmodule.php?toId=" . $message['toUser'];
+} ?>">
+                <?php if($message["toUser"] == $user_id) {
+                  echo $message["sender_name"];
+
+                } else {
+                  echo $message["receiver_name"];
+                } ?>
+              </a>
+            </td>
             <td><?php echo $message['message'] ?></td>
             <td><?php echo $message['timestamp'] ?></td>
             <!-- <a href="chat/chatmodule.php?toId=<?php echo $message['toUser']; ?>">
