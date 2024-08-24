@@ -35,7 +35,7 @@ $stmt->execute();
 $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 foreach ($messages as $message) {
-  echo '<div class="message">' . htmlspecialchars($message['message']) . '</div>';
+  echo '<div class="message">' . htmlspecialchars($message['message'] ?? "") . '</div>';
 }
 
 ?>

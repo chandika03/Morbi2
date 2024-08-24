@@ -1,5 +1,6 @@
 <?php
 include('dbconn.php');
+include('utils/distance.php');
 session_start();
 
 if (!isset($_SESSION['user'])) {
@@ -7,11 +8,11 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
-$current_user = (int)$_SESSION['user'];
+$current_user = (int) $_SESSION['user'];
 
 // Get search parameters from GET request
 $gender = isset($_GET['gender']) ? $_GET['gender'] : '';
-$age = isset($_GET['age']) ? (int)$_GET['age'] : '';
+$age = isset($_GET['age']) ? (int) $_GET['age'] : '';
 $location = isset($_GET['location']) ? $_GET['location'] : '';
 
 // Build the SQL query
@@ -39,16 +40,23 @@ if ($location) {
 $stmt = $pdo->prepare($query);
 $stmt->execute($params);
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$stmt = $pdo->prepare('SELECT * FROM users WHERE user_id = :current_user');
+$stmt->bindParam(':current_user', $current_user);
+$stmt->execute();
+$cu = $stmt->fetch(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
         /* === Google Font Import - Poppins === */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -92,9 +100,9 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         .navbar {
-            width: 90%; 
+            width: 90%;
             display: flex;
-            justify-content: flex-start; 
+            justify-content: flex-start;
             align-items: center;
             margin: auto;
             padding: 10px;
@@ -110,8 +118,8 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .navbar a {
             color: #f2f2f2;
             text-align: center;
-            padding: 8px 12px; 
-            font-size: 16px; 
+            padding: 8px 12px;
+            font-size: 16px;
             text-decoration: none;
             display: block;
             margin-right: 5px;
@@ -162,7 +170,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
             width: 140px;
             border-radius: 50%;
             padding: 3px;
-            background: #9a208c; 
+            background: #9a208c;
             margin-top: 30px;
         }
 
@@ -184,7 +192,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         .card .media-icons i {
-            color: #9a208c; 
+            color: #9a208c;
             opacity: 0.6;
             margin-top: 10px;
             transition: all 0.3s ease;
@@ -243,7 +251,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         .card .button button {
-            background: #9a208c; 
+            background: #9a208c;
             outline: none;
             border: none;
             color: #fff;
@@ -255,7 +263,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         .card .button button:hover {
-            background: #e11299; 
+            background: #e11299;
         }
 
         .swiper-slide {
@@ -267,7 +275,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
             max-width: 1200px;
             margin: 20px auto;
             position: relative;
-            overflow: hidden; 
+            overflow: hidden;
         }
 
         .header input {
@@ -340,7 +348,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         .search-form button {
-            background: #9a208c; 
+            background: #9a208c;
             color: #fff;
             border: none;
             padding: 8px 12px;
@@ -349,69 +357,87 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         .search-form button:hover {
-            background: #e11299; 
+            background: #e11299;
         }
     </style>
 </head>
+
 <body>
-<header class="header">
-    <a href="#" class="logo">MORBI</a>
-    <nav class="navbar">
-        <a href="morbi.php">Home</a>
-        <a href="users_about_us.php">About us</a>
-        <form class="search-form" action="search_results.php" method="GET">
-            <label for="gender">Looking for:</label>
-            <select id="gender" name="gender">
-                <option value="">Any</option>
-                <option value="male" <?php if ($gender === 'male') echo 'selected'; ?>>Male</option>
-                <option value="female" <?php if ($gender === 'female') echo 'selected'; ?>>Female</option>
-                <option value="other" <?php if ($gender === 'other') echo 'selected'; ?>>Other</option>
-            </select>
+    <header class="header">
+        <a href="#" class="logo">MORBI</a>
+        <nav class="navbar">
+            <a href="morbi.php">Home</a>
+            <a href="users_about_us.php">About us</a>
+            <form class="search-form" action="search_results.php" method="GET">
+                <label for="gender">Looking for:</label>
+                <select id="gender" name="gender">
+                    <option value="">Any</option>
+                    <option value="male" <?php if ($gender === 'male')
+                        echo 'selected'; ?>>Male</option>
+                    <option value="female" <?php if ($gender === 'female')
+                        echo 'selected'; ?>>Female</option>
+                    <option value="other" <?php if ($gender === 'other')
+                        echo 'selected'; ?>>Other</option>
+                </select>
 
-            <label for="age">Age:</label>
-            <input type="number" id="age" name="age" placeholder="Enter age" min="18" value="<?php echo htmlspecialchars($age); ?>">
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age" placeholder="Enter age" min="18"
+                    value="<?php echo htmlspecialchars($age); ?>">
 
-            <label for="location">Living in:</label>
-            <input type="text" id="location" name="location" placeholder="Enter location" value="<?php echo htmlspecialchars($location); ?>">
+                <label for="location">Living in:</label>
+                <input type="text" id="location" name="location" placeholder="Enter location"
+                    value="<?php echo htmlspecialchars($location); ?>">
 
-            <button type="submit">Search</button>
-        </form>
-    </nav>
-    <div class="profile">
-        <!-- Assuming the profile image logic here -->
-    </div>
-</header>
-<section>
-    <div class="swiper mySwiper container">
-        <div class="swiper-wrapper content">
-            <?php foreach ($users as $user): ?>
-                <div class="swiper-slide card">
-                    <div class="card-content">
-                        <div class="media-icons">
-                            <a href="https://www.facebook.com/"><i class="fab fa-facebook"></i></a>
-                            <a href="https://www.twitter.com/"><i class="fab fa-twitter"></i></a>
-                            <a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
-                        </div>
-                        <div class="image">
-                            <img src="<?php echo htmlspecialchars($user['user_image']); ?>" alt="User Image" class="card-img"/>
-                        </div>
-                    </div>
-                    <div class="name-bio-age-address">
-                        <span class="name"><h2><?php echo htmlspecialchars($user['user_name']); ?></h2></span>
-                        <span class="age"><?php echo htmlspecialchars($user['user_age']); ?></span>
-                        <span class="address">📍<?php echo htmlspecialchars($user['user_address']); ?></span>
-                        <span class="bio"><p><?php echo htmlspecialchars($user['user_details']); ?></p></span>
-                        <span class="interest"><p><?php echo htmlspecialchars($user['user_interest']); ?></p></span>
-                        <div class="button">
-                            <a href="chat/chatmodule.php?toId=<?php echo htmlspecialchars($user['user_id']); ?>"><button>Message💬</button></a>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
+                <button type="submit">Search</button>
+            </form>
+        </nav>
+        <div class="profile">
+            <!-- Assuming the profile image logic here -->
         </div>
-    </div>
-</section>
-<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-<script src="./swiper.js"></script>
+    </header>
+    <section>
+        <div class="swiper mySwiper container">
+            <div class="swiper-wrapper content">
+                <?php foreach ($users as $user): ?>
+                    <div class="swiper-slide card">
+                        <div class="card-content">
+                            <div class="media-icons">
+                                <a href="https://www.facebook.com/"><i class="fab fa-facebook"></i></a>
+                                <a href="https://www.twitter.com/"><i class="fab fa-twitter"></i></a>
+                                <a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
+                            </div>
+                            <div class="image">
+                                <img src="<?php echo htmlspecialchars($user['user_image']); ?>" alt="User Image"
+                                    class="card-img" />
+                            </div>
+                        </div>
+                        <div class="name-bio-age-address">
+                            <span class="name">
+                                <h2><?php echo htmlspecialchars($user['user_name']); ?></h2>
+                            </span>
+                            <span class="age"><?php echo htmlspecialchars($user['user_age']); ?></span>
+                            <span class="address">📍<?php echo htmlspecialchars($user['user_address']); ?> /div>
+                                (<?php echo getRoadDistance($user['latitude'], $user['longitude'], $cu['latitude'], $cu['longitude']); ?>
+                                km away)
+                            </span>
+                            <span class="bio">
+                                <p><?php echo htmlspecialchars($user['user_details']); ?></p>
+                            </span>
+                            <span class="interest">
+                                <p><?php echo htmlspecialchars($user['user_interest']); ?></p>
+                            </span>
+                            <div class="button">
+                                <a
+                                    href="chat/chatmodule.php?toId=<?php echo htmlspecialchars($user['user_id']); ?>"><button>Message💬</button></a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="./swiper.js"></script>
 </body>
+
 </html>

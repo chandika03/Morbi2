@@ -45,6 +45,12 @@ body {
   background-color: #e11299;
 }
 
+.active-chat {
+  background-color: #e11299;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+}
+
 .chat {
   flex-grow: 1;
   background-color: #ffeaea;
@@ -71,9 +77,12 @@ body {
   align-items: center;
   margin-left: 70px;
 }
-input {
-  padding: 7px;
+.chat-input input {
+  padding: 10px;
   width: 550px;
+  outline: none;
+  border: none;
+  border-radius: 4px;
 }
 
 #message-input {
@@ -130,14 +139,17 @@ button:hover {
 }
 
 .report button {
-  background-color: #9a208c;
+  background-color: rgb(219, 0, 0);
+  padding: 0.6rem 1rem;
+  text-transform: capitalize;
 }
 
 .report button:hover {
-  background-color: #e11299;
+  background-color: rgb(120, 0, 0);
 }
 
 .back button {
+  padding: 0.5rem 1rem;
   background-color: #9a208c;
 }
 

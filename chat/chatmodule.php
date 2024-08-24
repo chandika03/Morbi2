@@ -1,33 +1,33 @@
-<?php 
-  session_start();
-  // echo $_SESSION['user'];
-  if(!isset($_SESSION['user'])){
-    header("Location: /login.php");
-    exit();
-  }
-  include('../dbconn.php');
-  $toUser = $_GET['toId'];
-  $fromUser = $_SESSION['user'];
+<?php
+session_start();
+// echo $_SESSION['user'];
+if (!isset($_SESSION['user'])) {
+  header("Location: /login.php");
+  exit();
+}
+include('../dbconn.php');
+$toUser = $_GET['toId'];
+$fromUser = $_SESSION['user'];
 
-  $stmt1 = $pdo->query("SELECT * FROM message WHERE fromUser=$fromUser AND toUser=$toUser");
-  $info=$stmt1->fetchAll(PDO::FETCH_ASSOC);
-  if(empty($info)){
-    $stmt = $pdo->prepare("INSERT INTO message (fromUser, toUser) VALUE (:fromuser,:touser)");
-    $stmt->bindParam(':fromuser', $fromUser);
-    $stmt->bindParam(':touser', $toUser);
-    $stmt->execute();
-  }
+$stmt1 = $pdo->query("SELECT * FROM message WHERE fromUser=$fromUser AND toUser=$toUser");
+$info = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+if (empty($info)) {
+  $stmt = $pdo->prepare("INSERT INTO message (fromUser, toUser) VALUE (:fromuser,:touser)");
+  $stmt->bindParam(':fromuser', $fromUser);
+  $stmt->bindParam(':touser', $toUser);
+  $stmt->execute();
+}
 
-  $stmt2=$pdo->prepare("SELECT * FROM message WHERE fromUser =:toUser AND toUser = :fromUser");
-  $stmt2->bindParam(':toUser', $toUser);
-  $stmt2->bindParam(':fromUser', $fromUser);
-  $stmt2->execute();
-  $reply_info=$stmt2->fetchAll(PDO::FETCH_ASSOC);
+$stmt2 = $pdo->prepare("SELECT * FROM message WHERE fromUser =:toUser AND toUser = :fromUser");
+$stmt2->bindParam(':toUser', $toUser);
+$stmt2->bindParam(':fromUser', $fromUser);
+$stmt2->execute();
+$reply_info = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
-  $stmt3 = $pdo->prepare("SELECT * FROM users WHERE user_id = :toUser");
-  $stmt3->bindParam(':toUser', $toUser);
-  $stmt3->execute();
-  $toUser_image=$stmt3->fetchAll(PDO::FETCH_ASSOC);
+$stmt3 = $pdo->prepare("SELECT * FROM users WHERE user_id = :toUser");
+$stmt3->bindParam(':toUser', $toUser);
+$stmt3->execute();
+$toUser_image = $stmt3->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -58,12 +58,16 @@
             <p><?php echo $toUser_image[0]['user_details'] ?></p>
       </div>
           <ul class="sidebar-menu">
-            <li class="active">Chats</li>
+            <li >
+              <div class="active-chat">
+              Chats
+              </div>
+            </li>
           </ul>
           
             <div class="report">
             <button>
-            <a href="../report/report.php?userId=<?php echo $toUser ?>">Report the user</a>
+            <a href="../report/report.php?userId=<?php echo $toUser ?>">Report user</a>
         </button>
             </div>
           
@@ -82,16 +86,15 @@
           <div class="form">
                 <div class="inbox">
                     <div class="reply">
-                      <?php 
-                        if(empty($reply_info)){
-                          // echo "";
-                        }
-                        else{
-                          foreach($reply_info as $reply){
-                            ?>
-                            <!-- echo <?php echo $reply_info[0]['message'];?> -->
-                         <?php }
-                         }
+                      <?php
+                      if (empty($reply_info)) {
+                        // echo "";
+                      } else {
+                        foreach ($reply_info as $reply) {
+                          ?>
+                                        <!-- echo <?php echo $reply_info[0]['message']; ?> -->
+                               <?php }
+                      }
                       ?>
                     </div>
                 </div>
@@ -106,34 +109,34 @@
 
 </div> -->
 <!-- <div class="chat-messages">
-    <?php 
+    <?php
     // foreach ($reply_info as $reply) { ?>
       <p class="message">
         <h1>nff b fbbgb</h1>
-        <?php 
-        // echo $reply['message']?>
+        <?php
+        // echo $reply['message'] ?>
     </p>
-    <?php 
-  // } ?>
+    <?php
+    // } ?>
   </div> -->
   <div class="chat-messages">
     <?php foreach ($reply_info as $reply) { ?>
-        <?php if ($reply['fromUser'] == $fromUser) { ?>
-            <p class="message sent-message">
-                <?php echo $reply['message'] ?>
-            </p>
-        <?php } else { ?>
-            <p class="message received-message">
-                <?php echo $reply['message'] ?>
-            </p>
-        <?php } ?>
+              <?php if ($reply['fromUser'] == $fromUser) { ?>
+                        <p class="message sent-message">
+                            <?php echo $reply['message'] ?>
+                        </p>
+              <?php } else { ?>
+                        <p class="message received-message">
+                            <?php echo $reply['message'] ?>
+                        </p>
+              <?php } ?>
     <?php } ?>
 </div>
 
 
             <div class="chat-input">
                 <div class="input-data">
-                  <form action='message.php?toId=<?php echo $toUser;?>' method="post">
+                  <form action='message.php?toId=<?php echo $toUser; ?>' method="post">
                     <input id="data" name="data" type="text" placeholder="Type something here.." required>
                     <button id="send-button">Send</button>
                   </form>
