@@ -24,6 +24,8 @@ include('../dbconn.php');
 // echo $html;
 // Include necessary files and establish database connection
 
+$current_user = $_SESSION['user'];
+
 $fromUser = $_GET['fromUser'];
 $toUser = $_GET['toUser'];
 
@@ -35,7 +37,12 @@ $stmt->execute();
 $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 foreach ($messages as $message) {
-  echo '<div class="message">' . htmlspecialchars($message['message'] ?? "") . '</div>';
+  if($message['fromUser'] == $current_user){
+    echo '<div class="message_sent">' . htmlspecialchars($message['message'] ?? "") . '</div>';
+  } else {
+    echo '<div class="message_received">' . htmlspecialchars($message['message'] ?? "") . '</div>';
+  }
+  // echo '<div class="message">' . htmlspecialchars($message['message'] ?? "") . '</div>';
 }
 
 ?>

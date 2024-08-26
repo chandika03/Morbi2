@@ -109,6 +109,28 @@ body {
   overflow: hidden;
 }
 
+.message_sent {
+  padding: 10px 10px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: lightblue;
+  width: fit-content;
+  text-align: end;
+  margin-left: auto;
+}
+
+.message_received {
+  padding: 10px 10px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: white;
+  width: fit-content;
+  text-align: start;
+  margin-right: auto;
+}
+
 .sent {
   background-color: #f5c6ec;
   align-self: flex-end;
